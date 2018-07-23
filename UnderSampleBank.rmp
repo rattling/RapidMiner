@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="8.2.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="8.2.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="8.2.000" expanded="true" height="68" name="Retrieve bank" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="Data/CRM/bank"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="8.2.000" expanded="true" height="82" name="Set Role" width="90" x="179" y="34">
+        <parameter key="attribute_name" value="y"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="8.2.000" expanded="true" height="103" name="Filter Examples" width="90" x="313" y="34">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="y.equals.no"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="8.2.000" expanded="true" height="82" name="Sample" width="90" x="447" y="34">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="5000"/>
+        <parameter key="sample_ratio" value="0.1"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class"/>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="8.2.000" expanded="true" height="68" name="Retrieve bank (2)" width="90" x="45" y="187">
+        <parameter key="repository_entry" value="Data/CRM/bank"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="8.2.000" expanded="true" height="103" name="Filter Examples (2)" width="90" x="179" y="187">
+        <parameter key="parameter_expression" value=""/>
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="invert_filter" value="false"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="y.equals.yes"/>
+        </list>
+        <parameter key="filters_logic_and" value="true"/>
+        <parameter key="filters_check_metadata" value="true"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="8.2.000" expanded="true" height="82" name="Sample (2)" width="90" x="380" y="187">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="5000"/>
+        <parameter key="sample_ratio" value="0.1"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class"/>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="8.2.000" expanded="true" height="103" name="Append" width="90" x="581" y="85">
+        <parameter key="datamanagement" value="double_array"/>
+        <parameter key="data_management" value="auto"/>
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="store" compatibility="8.2.000" expanded="true" height="68" name="Store" width="90" x="715" y="85">
+        <parameter key="repository_entry" value="Data/CRM/bankEven"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="8.2.000" expanded="true" height="82" name="Write CSV" width="90" x="916" y="85">
+        <parameter key="csv_file" value="C:\Users\JohnArm\Desktop\Johns Jobs\Institute of Banking Course\CRM Case Study\bankEven.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Retrieve bank" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_op="Sample" to_port="example set input"/>
+      <connect from_op="Sample" from_port="example set output" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Retrieve bank (2)" from_port="output" to_op="Filter Examples (2)" to_port="example set input"/>
+      <connect from_op="Filter Examples (2)" from_port="example set output" to_op="Sample (2)" to_port="example set input"/>
+      <connect from_op="Sample (2)" from_port="example set output" to_op="Append" to_port="example set 2"/>
+      <connect from_op="Append" from_port="merged set" to_op="Store" to_port="input"/>
+      <connect from_op="Store" from_port="through" to_op="Write CSV" to_port="input"/>
+      <connect from_op="Write CSV" from_port="through" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+    </process>
+  </operator>
+</process>
